@@ -1,0 +1,19 @@
+[MASTER]
+ignore=venv
+jobs=1
+load-plugins=pylint.extensions.mccabe
+
+[MESSAGES CONTROL]
+disable=
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+
+[FORMAT]
+max-line-length=100
+
+[IMPORTS]
+# Warn on imports that cannot be resolved
+known-standard-library=
+known-third-party=pytest,playwright
+known-first-party=e2e

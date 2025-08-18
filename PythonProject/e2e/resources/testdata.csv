@@ -1,0 +1,4 @@
+test_case_name,username,password,expected_url
+test_login_valid_user,user123,pass123,https://example.com/dashboard
+test_login_invalid_password,user456,wrong_pass,https://example.com/login?error=true
+test_login_invalid_username,bad_user,some_pass,https://example.com/login?error=true
