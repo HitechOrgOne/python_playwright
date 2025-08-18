@@ -1,0 +1,84 @@
+name: Playwright Tests with Allure on EC2 (Python)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Playwright with Allure on EC2 (Python)
+    runs-on: self-hosted
+
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.44.0-jammy
+      options: --entrypoint ""  # Optional: override default entrypoint to use bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'  # Adjust version as needed
+
+      - name: Set up Java (for Allure)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Verify Python and Java installation
+        run: |
+          python --version
+          pip --version
+          java -version
+          javac -version
+
+      - name: Install Python dependencies and run tests
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-playwright allure-pytest
+          playwright install --with-deps
+          pytest --alluredir=allure-results
+          allure generate allure-results --clean -o allure-report
+
+      - name: Upload Allure report (HTML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+
+      - name: Preconfigure tzdata and install AWS CLI
+        if: always()
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          echo "tzdata tzdata/Areas select Etc" | debconf-set-selections
+          echo "tzdata tzdata/Zones/Etc select UTC" | debconf-set-selections
+          apt-get update
+          apt-get install -y tzdata
+          dpkg-reconfigure --frontend noninteractive tzdata
+          apt-get install -y awscli
+
+      - name: Configure AWS credentials
+        if: always()
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+          aws configure set region "$AWS_REGION"
+
+      - name: Upload Allure report to S3 with timestamp
+        if: always()
+        env:
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+        run: |
+          TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+          aws s3 cp --recursive allure-report/ "s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
+          echo "Uploaded Allure report to s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
