@@ -7,7 +7,6 @@ from playwright.sync_api import Page, expect
 from e2e.utils.file_utils import FileUtils
 from .base_page import BasePage
 
-
 class LoginPage(BasePage):
 
     def __init__(self, page: Page):
