@@ -13,12 +13,12 @@ class LoginPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.welcome_message = None
-        locators_file = Path(__file__).parent.parent / "locators" / "login_page_locators.yaml"
-        self.username_field = FileUtils.get_locator("login_page", "username_field", locators_file)
-        self.password_field = FileUtils.get_locator("login_page", "password_field", locators_file)
-        self.login_button = FileUtils.get_locator("login_page", "login_button", locators_file)
-        self.error_message = FileUtils.get_locator("login_page", "error_message", locators_file)
-        self.logout_button = FileUtils.get_locator("login_page", "logout_button", locators_file)
+        locators = Path(__file__).parent.parent / "locators" / "login_page_locators.yaml"
+        self.username_field = FileUtils.get_locator("login_page", "username_field", locators)
+        self.password_field = FileUtils.get_locator("login_page", "password_field", locators)
+        self.login_button = FileUtils.get_locator("login_page", "login_button", locators)
+        self.error_message = FileUtils.get_locator("login_page", "error_message", locators)
+        self.logout_button = FileUtils.get_locator("login_page", "logout_button", locators)
 
     def enter_username(self, username: str):
         """Enter username"""
