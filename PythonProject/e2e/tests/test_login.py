@@ -11,7 +11,7 @@ def test_login_valid_user(page, base_url, app_config):
     username = app_config.get("username")
     password = app_config.get("password")
     login_page.login(username, password)
-    assert page.url == f"{base_url}/inventory.html", "Login failed, did not redirect to dashboard."
+    assert page.url == f"{base_url}inventory.html", "Login failed, did not redirect to dashboard."
 
 
 
