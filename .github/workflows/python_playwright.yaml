@@ -12,7 +12,7 @@ jobs:
 
     container:
       image: mcr.microsoft.com/playwright/python:v1.44.0-jammy
-      options: --entrypoint ""  # Optional: override default entrypoint to use bash
+      options: --entrypoint ""  # Use bash as entrypoint
 
     steps:
       - name: Checkout repository
@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'  # Adjust version as needed
+          python-version: '3.11'
 
       - name: Set up Java (for Allure)
         uses: actions/setup-java@v4
@@ -36,14 +36,13 @@ jobs:
           java -version
           javac -version
 
-
       - name: Install Allure Commandline
         run: |
-              curl -o allure-2.27.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-              tar -xvzf allure-2.27.0.tgz
-              mv allure-2.27.0 /opt/allure
-              ln -s /opt/allure/bin/allure /usr/local/bin/allure
-              
+          curl -o allure-2.27.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+          tar -xvzf allure-2.27.0.tgz
+          mv allure-2.27.0 /opt/allure
+          ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
       - name: Install Python dependencies and run tests
         run: |
           pip install --upgrade pip
@@ -52,7 +51,6 @@ jobs:
           playwright install --with-deps
           pytest PythonProject/e2e/tests --alluredir=PythonProject/e2e/reports/allure-results
           allure generate PythonProject/e2e/reports/allure-results --clean -o PythonProject/e2e/reports/allure-report
-
 
       - name: Upload Allure report (HTML)
         if: always()
@@ -89,6 +87,6 @@ jobs:
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
         run: |
           TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-          echo "S3 BUCKET NAME NAME BAME BAME NAME ${S3_BUCKET_NAME}"
+          echo "Uploading Allure report to S3 bucket: ${S3_BUCKET_NAME}"
           aws s3 cp --recursive PythonProject/e2e/reports/allure-report/ "s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
           echo "Uploaded Allure report to s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
