@@ -45,6 +45,13 @@ jobs:
           pytest PythonProject/e2e/tests --alluredir=allure-results
           allure generate PythonProject/e2e/allure-results --clean -o PythonProject/e2e/allure-report
 
+      - name: Install Allure Commandline
+        run: |
+              curl -o allure-2.27.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+              tar -xvzf allure-2.27.0.tgz
+              sudo mv allure-2.27.0 /opt/allure
+              sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
       - name: Upload Allure report (HTML)
         if: always()
         uses: actions/upload-artifact@v4
