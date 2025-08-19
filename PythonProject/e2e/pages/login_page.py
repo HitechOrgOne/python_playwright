@@ -25,6 +25,7 @@ class LoginPage(BasePage):
     def enter_password(self, password: str):
         """Enter password"""
         self.fill_text(self.password_field, password)
+
     
     def click_login(self):
         """Click login button"""
