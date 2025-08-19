@@ -5,17 +5,32 @@ from dotenv import dotenv_values
 from e2e.utils.file_utils import FileUtils
 import allure
 from e2e.constants import  ENV_FILE_NAME
+from utils.config import get_env_variable
 
 # Resolve project root dynamically (conftest.py lives inside e2e/)
 PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 
 @pytest.fixture(scope="session")
 def app_config():
+    """
+    Loads test configuration:
+    - First from .env file (for local/dev use)
+    - Falls back to environment variables (for CI/CD)
+    """
     e2e_root = Path(__file__).resolve().parent
     env_test_path = e2e_root / ENV_FILE_NAME
+    config = {}
     if env_test_path.exists():
-        return dotenv_values(env_test_path)
-    return {}
+        # Load from .env
+        config = dotenv_values(env_test_path)
+    
+    # Fallback to system environment (CI/CD case)
+    config = {
+        **config,
+        "username": config.get("username") or os.getenv("TEST_USERNAME"),
+        "password": config.get("password") or os.getenv("TEST_PASSWORD"),
+    }
+    return config
 
 @pytest.fixture(scope="session")
 def base_url(app_config):
