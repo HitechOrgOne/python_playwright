@@ -42,8 +42,8 @@ jobs:
           pip install -r PythonProject/e2e/requirements.txt
           pip install pytest-playwright allure-pytest
           playwright install --with-deps
-          pytest --alluredir=allure-results
-          allure generate allure-results --clean -o allure-report
+          pytest PythonProject/e2e/tests --alluredir=allure-results
+          allure generate PythonProject/e2e/allure-results --clean -o PythonProject/e2e/allure-report
 
       - name: Upload Allure report (HTML)
         if: always()
