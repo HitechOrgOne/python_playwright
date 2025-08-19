@@ -21,11 +21,11 @@ class BasePage:
 
     def fill_text(self, selector: str, text: str):
         """Fill text in input field (auto-waits)"""
-        self.page.locator(selector).fill(text)
+        self.page.fill(selector, text)
 
     def type_text(self, selector: str, text: str):
         """Type text character by character (auto-waits)"""
-        self.page.locator(selector).type(text)
+        self.page.type(selector, text)
 
     def get_text(self, selector: str) -> str:
         """Get inner text of element (auto-waits)"""
