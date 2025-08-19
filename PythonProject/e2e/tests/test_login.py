@@ -1,7 +1,6 @@
 import pytest
 from e2e.pages.login_page import LoginPage
 
-
 @pytest.mark.smoke
 def test_login_valid_user(page, base_url, app_config):
     """
