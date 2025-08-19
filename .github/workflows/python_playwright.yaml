@@ -80,5 +80,6 @@ jobs:
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
         run: |
           TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+          echo "S3 BUCKET NAME NAME BAME BAME NAME ${S3_BUCKET_NAME}"
           aws s3 cp --recursive allure-report/ "s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
           echo "Uploaded Allure report to s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
