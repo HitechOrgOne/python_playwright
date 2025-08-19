@@ -2,7 +2,7 @@ name: Diagnose CI Failure with Gemini
 
 on:
   workflow_run:
-    workflows: ["Your Workflow Name Here"]  # Replace with your actual CI workflow name
+    workflows: ["Playwright Tests with Allure on EC2 (Python)"]  # Replace with your actual CI workflow name
     types:
       - completed
 
