@@ -36,6 +36,9 @@ jobs:
           java -version
           javac -version
 
+      - name: Set environment URL
+        run: echo "BASE_URL=${{ vars.STAGING_URL }}" >> $GITHUB_ENV
+
       - name: Install Python dependencies and run tests
         env:
           TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
