@@ -50,11 +50,8 @@ jobs:
           pip install pytest-playwright allure-pytest
           playwright install --with-deps
           pytest PythonProject/e2e/tests --alluredir=PythonProject/e2e/reports/allure-results
+          ls -R PythonProject/e2e/reports || echo "NO NO NONNNNNNNNNN NNNNNNNNNNNNNNNNNNNNNNNNNNN reports generated"
           allure generate PythonProject/e2e/reports/allure-results --clean -o PythonProject/e2e/reports/allure-report
-
-      - name: Debug allure paths
-        run: |
-          ls -R PythonProject/e2e/reports || echo "No reports folder"
 
       - name: Upload Allure report (HTML)
         if: always()
