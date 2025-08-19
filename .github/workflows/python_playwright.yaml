@@ -12,7 +12,7 @@ jobs:
 
     container:
       image: mcr.microsoft.com/playwright/python:v1.44.0-jammy
-      options: --entrypoint ""  # Use bash as entrypoint
+      options: --entrypoint ""
 
     steps:
       - name: Checkout repository
@@ -36,6 +36,15 @@ jobs:
           java -version
           javac -version
 
+      - name: Install Python dependencies and run tests
+        run: |
+          pip install --upgrade pip
+          pip install -r PythonProject/e2e/requirements.txt
+          pip install pytest-playwright allure-pytest
+          playwright install --with-deps
+          pytest PythonProject/e2e/tests --alluredir=PythonProject/e2e/reports/allure-results -v
+          ls -R PythonProject/e2e/reports || echo "No reports generated"
+
       - name: Install Allure Commandline
         run: |
           curl -o allure-2.27.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
@@ -43,15 +52,10 @@ jobs:
           mv allure-2.27.0 /opt/allure
           ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
-      - name: Install Python dependencies and run tests
+      - name: Generate Allure report
+        if: always()
         run: |
-          pip install --upgrade pip
-          pip install -r PythonProject/e2e/requirements.txt
-          pip install pytest-playwright allure-pytest
-          playwright install --with-deps
-          pytest PythonProject/e2e/tests --alluredir=PythonProject/e2e/reports/allure-results
-          ls -R PythonProject/e2e/reports || echo "NO NO NONNNNNNNNNN NNNNNNNNNNNNNNNNNNNNNNNNNNN reports generated"
-          allure generate PythonProject/e2e/reports/allure-results --clean -o PythonProject/e2e/reports/allure-report
+          allure generate PythonProject/e2e/reports/allure-results --clean -o PythonProject/e2e/reports/allure-report || echo "No allure results found"
 
       - name: Upload Allure report (HTML)
         if: always()
@@ -88,6 +92,5 @@ jobs:
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
         run: |
           TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-          echo "Uploading Allure report to S3 bucket: ${S3_BUCKET_NAME}"
+          echo "Uploading to s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
           aws s3 cp --recursive PythonProject/e2e/reports/allure-report/ "s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
-          echo "Uploaded Allure report to s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
