@@ -36,6 +36,14 @@ jobs:
           java -version
           javac -version
 
+
+      - name: Install Allure Commandline
+        run: |
+              curl -o allure-2.27.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+              tar -xvzf allure-2.27.0.tgz
+              sudo mv allure-2.27.0 /opt/allure
+              sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+              
       - name: Install Python dependencies and run tests
         run: |
           pip install --upgrade pip
@@ -45,19 +53,13 @@ jobs:
           pytest PythonProject/e2e/tests --alluredir=PythonProject/e2e/reports/allure-results
           allure generate PythonProject/e2e/reports/allure-results --clean -o PythonProject/e2e/reports/allure-report
 
-      - name: Install Allure Commandline
-        run: |
-              curl -o allure-2.27.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-              tar -xvzf allure-2.27.0.tgz
-              sudo mv allure-2.27.0 /opt/allure
-              sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
       - name: Upload Allure report (HTML)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: allure-report/
+          path: PythonProject/e2e/reports/allure-report/
 
       - name: Preconfigure tzdata and install AWS CLI
         if: always()
