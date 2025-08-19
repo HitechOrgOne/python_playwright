@@ -1,0 +1,23 @@
+name: Diagnose CI Failure with Gemini
+
+on:
+  workflow_run:
+    workflows: ["Your Workflow Name Here"]  # Replace with your actual CI workflow name
+    types:
+      - completed
+
+jobs:
+  diagnose:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/run-gemini-cli@v1
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          prompt: |
+            The CI pipeline just failed.
+            Analyze the failure based on the logs below and suggest a fix.
+            Include changes to the workflow file if needed.
+            ```
+            ${{ github.event.workflow_run.head_commit.message }}
+            ```
