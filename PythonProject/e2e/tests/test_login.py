@@ -13,6 +13,7 @@ def test_login_valid_user(page, base_url, app_config):
     login_page.login(username, password)
     assert page.url == f"{base_url}/inventory.html", "Login failed, did not redirect to dashboard."
 
+
 @pytest.mark.skip(reason="This test is currently being refactored and is broken.")
 @pytest.mark.regression
 def test_login_invalid_password(page, base_url, app_config):
