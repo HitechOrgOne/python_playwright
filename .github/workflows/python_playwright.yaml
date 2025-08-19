@@ -37,6 +37,9 @@ jobs:
           javac -version
 
       - name: Install Python dependencies and run tests
+        env:
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
           pip install --upgrade pip
           pip install -r PythonProject/e2e/requirements.txt
