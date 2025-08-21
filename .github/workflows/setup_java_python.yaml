@@ -1,36 +1,38 @@
+---
 name: Host Setup - Install Python and Java
-
 on:
-  workflow_dispatch:
+  workflow_dispatch: null
   push:
     branches:
       - main
-
 jobs:
   setup-host:
     runs-on: self-hosted
-
     steps:
       - name: Check and install Python 3.11
         run: |
           if ! command -v python3.11 &> /dev/null; then
             echo "Python 3.11 not found. Installing..."
             sudo apt update
+            sudo apt install -y software-properties-common
+            sudo add-apt-repository ppa:deadsnakes/ppa -y
+            sudo apt update
             sudo apt install -y python3.11 python3.11-venv python3.11-dev
           else
             echo "Python 3.11 is already installed."
           fi
-
+          
       - name: Check and install Java 17
-        run: |
-          if ! command -v java &> /dev/null || [[ "$(java -version 2>&1)" != *"17."* ]]; then
+        run: >
+          if ! command -v java &> /dev/null || [[ "$(java -version 2>&1)" != *"17."*
+          ]]; then
             echo "Java 17 not found. Installing..."
             sudo apt update
             sudo apt install -y openjdk-17-jdk
           else
             echo "Java 17 is already installed."
           fi
-
+          
       - name: Verify installation
         run: |
           python3.11 --version
