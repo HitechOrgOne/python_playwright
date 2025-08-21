@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**/*.yml'
+      - '**/*.yaml'
 
 jobs:
   test:
@@ -89,3 +92,4 @@ jobs:
           TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
           echo "Uploading to s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
           aws s3 cp --recursive PythonProject/e2e/reports/allure-report/ "s3://$S3_BUCKET_NAME/allure-report/$TIMESTAMP/"
+
