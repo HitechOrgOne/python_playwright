@@ -49,15 +49,6 @@ jobs:
           pytest PythonProject/e2e/tests --alluredir=PythonProject/e2e/reports/allure-results -v
           ls -R PythonProject/e2e/reports || echo "No reports generated"
 
-      - name: Install AWS CLI v2 (standalone)
-        run: |
-          apt-get update
-          apt-get install -y unzip
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-          aws --version
-
       - name: Install Allure Commandline
         run: |
           curl -o allure-2.27.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
@@ -76,10 +67,6 @@ jobs:
         with:
           name: allure-report
           path: PythonProject/e2e/reports/allure-report/
-
-      - name: Remove AWS CLI v1 (optional)
-        run: |
-          apt-get remove -y awscli || true
 
       - name: Install AWS CLI v2 (standalone)
         if: always()
