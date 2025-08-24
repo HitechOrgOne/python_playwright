@@ -68,16 +68,17 @@ jobs:
           name: allure-report
           path: PythonProject/e2e/reports/allure-report/
 
-      - name: Preconfigure tzdata and install AWS CLI
+      - name: Remove AWS CLI v1 (optional)
+        run: |
+          apt-get remove -y awscli || true
+
+      - name: Install AWS CLI v2 (standalone)
         if: always()
         run: |
-          export DEBIAN_FRONTEND=noninteractive
-          echo "tzdata tzdata/Areas select Etc" | debconf-set-selections
-          echo "tzdata tzdata/Zones/Etc select UTC" | debconf-set-selections
-          apt-get update
-          apt-get install -y tzdata
-          dpkg-reconfigure --frontend noninteractive tzdata
-          apt-get install -y awscli
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            aws --version
 
       - name: Configure AWS credentials
         if: always()
