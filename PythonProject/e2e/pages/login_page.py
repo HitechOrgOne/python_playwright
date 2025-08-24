@@ -6,6 +6,7 @@ from .base_page import BasePage
 
 class LoginPage(BasePage):
 
+    
     # Selectors stored as class-level constants
     USERNAME_SELECTOR = "#user-name"
     PASSWORD_SELECTOR = "#password"
