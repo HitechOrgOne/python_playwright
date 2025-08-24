@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     name: Run Playwright with Allure on EC2 (Python)
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     container:
       image: mcr.microsoft.com/playwright/python:v1.44.0-jammy
