@@ -1,10 +1,8 @@
 ---
 name: Host Setup - Install Python and Java
 on:
-  workflow_dispatch: null
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+  
 jobs:
   setup-host:
     runs-on: self-hosted
