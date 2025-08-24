@@ -4,7 +4,6 @@ Login page object model for Playwright using clean Page Object Model
 from playwright.sync_api import Page, expect
 from .base_page import BasePage
 
-
 class LoginPage(BasePage):
 
     # Selectors stored as class-level constants
